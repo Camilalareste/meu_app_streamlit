@@ -1,34 +1,51 @@
 import streamlit as st
 
-st.set_page_config(page_title="Conteúdo dos Documentos", layout="wide")
+st.set_page_config(page_title="VaFacil & XyzLogicFlow", layout="wide")
 
-st.title("📄 Visualizador de Documentos")
+st.title("🚚 Plataforma VaFacil + XyzLogicFlow")
+st.subheader("Transformando a gestão de frotas e logística com dados, boas práticas e tecnologia.")
 
-st.header("📘 Documento 1: Redução de Custos na Frota")
+st.markdown("---")
+
+# Documento 1
+st.header("📘 Redução de Custos na Frota – VaFacil")
 st.markdown("""
-Este documento fala sobre práticas para reduzir os custos operacionais da frota, como:
-- Otimização de rotas
-- Manutenção preventiva
-- Condução econômica
-- Gestão eficiente do combustível
+Este módulo apresenta estratégias para empresas que desejam reduzir os custos operacionais da frota:
+
+✅ Otimização de rotas com dados  
+✅ Manutenção preventiva e redução de paradas inesperadas  
+✅ Condução econômica e treinamento de motoristas  
+✅ Controle e gestão eficiente do combustível  
+✅ Indicadores de performance para tomada de decisão  
 """)
 
-st.header("📗 Documento 2: Tendências em Transporte")
+# Documento 2
+st.header("📗 Tendências em Transporte – XyzLogicFlow")
 st.markdown("""
-Este documento aborda tendências atuais no setor de transporte e logística:
-- Digitalização e uso de IoT
-- Sustentabilidade e veículos elétricos
-- Inteligência Artificial e Big Data
+Explore as principais tendências que estão moldando o setor de transporte e logística em 2024:
+
+📡 Digitalização e rastreamento em tempo real  
+🔋 Sustentabilidade e uso de veículos elétricos  
+🧠 Inteligência Artificial na previsão de demanda  
+📊 Big Data para análise de desempenho logístico  
+🤝 Integração de sistemas e plataformas de gestão  
 """)
 
-st.header("📙 Documento 3: Boas Práticas na Logística")
+# Documento 3
+st.header("📙 Boas Práticas em Logística – XyzLogicFlow")
 st.markdown("""
-Este documento apresenta boas práticas em logística:
-- Armazenagem eficiente
-- Controle de estoque em tempo real
-- Uso de indicadores de desempenho
-- Integração entre setores
+Boas práticas aplicáveis para empresas que querem eficiência logística:
+
+🏢 Armazenagem inteligente e por tipo de carga  
+🚦 Planejamento de demanda e controle de estoque  
+📦 Logística reversa e sustentabilidade  
+🗂️ Automatização de processos com ERP/TMS/WMS  
+👨‍🏫 Capacitação contínua de equipes  
 """)
+
+st.markdown("---")
+st.success("App gerado com sucesso! 🚀 Aproveite e compartilhe com sua rede.")
+
 
 
 
