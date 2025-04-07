@@ -1,50 +1,104 @@
 import streamlit as st
+import folium
+from streamlit_folium import folium_static
+import random
+from datetime import datetime
 
-st.set_page_config(page_title="VaFacil & XyzLogicFlow", layout="wide")
+st.set_page_config(page_title="Transporte Inteligente", layout="wide")
+st.title("🚦 Plataforma de Mobilidade Urbana Inteligente")
 
-st.title("🚚 Plataforma VaFacil + XyzLogicFlow")
-st.subheader("Transformando a gestão de frotas e logística com dados, boas práticas e tecnologia.")
+# Base de localização (Recife)
+latitude_base = -8.0476
+longitude_base = -34.8770
 
-st.markdown("---")
+# Criar mapa
+m = folium.Map(location=[latitude_base, longitude_base], zoom_start=13)
 
-# Documento 1
-st.header("📘 Redução de Custos na Frota – VaFacil")
-st.markdown("""
-Este módulo apresenta estratégias para empresas que desejam reduzir os custos operacionais da frota:
+# Dados simulados de ônibus
+onibus = [
+    {"linha": "101", "lat": -8.047, "lon": -34.88},
+    {"linha": "102", "lat": -8.05, "lon": -34.87},
+    {"linha": "103", "lat": -8.045, "lon": -34.875}
+]
 
-✅ Otimização de rotas com dados  
-✅ Manutenção preventiva e redução de paradas inesperadas  
-✅ Condução econômica e treinamento de motoristas  
-✅ Controle e gestão eficiente do combustível  
-✅ Indicadores de performance para tomada de decisão  
-""")
+# Dados simulados de metrô
+metro = [
+    {"estacao": "Estação Central", "lat": -8.045, "lon": -34.88},
+    {"estacao": "Estação Sul", "lat": -8.05, "lon": -34.885}
+]
 
-# Documento 2
-st.header("📗 Tendências em Transporte – XyzLogicFlow")
-st.markdown("""
-Explore as principais tendências que estão moldando o setor de transporte e logística em 2024:
+# Dados simulados de acidentes
+acidentes = [
+    {"local": "Av. Conde da Boa Vista", "lat": -8.048, "lon": -34.881, "hora": datetime.now().strftime('%H:%M')}
+]
 
-📡 Digitalização e rastreamento em tempo real  
-🔋 Sustentabilidade e uso de veículos elétricos  
-🧠 Inteligência Artificial na previsão de demanda  
-📊 Big Data para análise de desempenho logístico  
-🤝 Integração de sistemas e plataformas de gestão  
-""")
+# Dados de lixo e ônibus escolar
+lixo = {"lat": -8.049, "lon": -34.879, "proxima_coleta": "08:00"}
+escolar = [
+    {"escola": "Escola A", "lat": -8.046, "lon": -34.878},
+    {"escola": "Escola B", "lat": -8.044, "lon": -34.876}
+]
 
-# Documento 3
-st.header("📙 Boas Práticas em Logística – XyzLogicFlow")
-st.markdown("""
-Boas práticas aplicáveis para empresas que querem eficiência logística:
+# Zona Azul e estacionamento
+estacionamentos = [
+    {"nome": "Zona Azul 1", "lat": -8.043, "lon": -34.879},
+    {"nome": "Estacionamento Central", "lat": -8.045, "lon": -34.882}
+]
 
-🏢 Armazenagem inteligente e por tipo de carga  
-🚦 Planejamento de demanda e controle de estoque  
-📦 Logística reversa e sustentabilidade  
-🗂️ Automatização de processos com ERP/TMS/WMS  
-👨‍🏫 Capacitação contínua de equipes  
-""")
+# Adiciona ícones no mapa
+for o in onibus:
+    folium.Marker(
+        [o["lat"], o["lon"]],
+        popup=f"Ônibus Linha {o['linha']}",
+        icon=folium.Icon(color="blue", icon="bus", prefix="fa")
+    ).add_to(m)
 
-st.markdown("---")
-st.success("App gerado com sucesso! 🚀 Aproveite e compartilhe com sua rede.")
+for mtr in metro:
+    folium.Marker(
+        [mtr["lat"], mtr["lon"]],
+        popup=f"Estação de Metrô: {mtr['estacao']}",
+        icon=folium.Icon(color="green", icon="train", prefix="fa")
+    ).add_to(m)
+
+for ac in acidentes:
+    folium.Marker(
+        [ac["lat"], ac["lon"]],
+        popup=f"🚧 Acidente: {ac['local']} às {ac['hora']}",
+        icon=folium.Icon(color="red", icon="exclamation-triangle", prefix="fa")
+    ).add_to(m)
+
+folium.Marker(
+    [lixo["lat"], lixo["lon"]],
+    popup=f"🚛 Próxima coleta de lixo: {lixo['proxima_coleta']}",
+    icon=folium.Icon(color="orange", icon="trash", prefix="fa")
+).add_to(m)
+
+for e in escolar:
+    folium.Marker(
+        [e["lat"], e["lon"]],
+        popup=f"🚌 Ônibus Escolar - {e['escola']}",
+        icon=folium.Icon(color="purple", icon="graduation-cap", prefix="fa")
+    ).add_to(m)
+
+for est in estacionamentos:
+    folium.Marker(
+        [est["lat"], est["lon"]],
+        popup=f"🅿️ {est['nome']}",
+        icon=folium.Icon(color="cadetblue", icon="car", prefix="fa")
+    ).add_to(m)
+
+# Interface para escolher visualização
+modo = st.sidebar.selectbox("Modo de Visualização", ["Usuário", "Gestor"])
+
+if modo == "Usuário":
+    st.sidebar.success("👤 Modo Usuário Ativo")
+    st.markdown("Veja informações úteis de transporte ao seu redor.")
+else:
+    st.sidebar.success("🛠️ Modo Gestor Ativo")
+    st.markdown("Monitore o trânsito, coletas e eventos urbanos em tempo real.")
+
+# Exibir mapa
+folium_static(m)
 
 
 
