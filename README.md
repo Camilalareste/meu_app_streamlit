@@ -142,6 +142,8 @@ elif modo == "Gestor":
 folium_static(m)
 
 st.caption(f"Atualizado em: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
+folium_static(m)
+
 
 
 
