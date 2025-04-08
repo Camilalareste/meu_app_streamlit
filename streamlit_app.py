@@ -1,4 +1,130 @@
 import streamlit as st
+import pandas as pd
+import requests
+
+st.set_page_config(page_title="Coleta de Lixo Urbano - Recife", layout="wide")
+st.title("🗑️ Coleta de Lixo Urbano - Recife")
+
+# Endpoint base da API
+API_URL = "http://dados.recife.pe.gov.br/api/3/action/datastore_search"
+RESOURCE_ID = "5b96a34d-06c9-4103-9717-1fdf0af5aee1"
+
+# Parâmetros da consulta
+params = {
+    "resource_id": RESOURCE_ID,
+    "limit": 100  # Número de registros a serem buscados
+}
+
+# Requisição à API
+response = requests.get(API_URL, params=params)
+
+if response.status_code == 200:
+    data = response.json()
+    records = data.get("result", {}).get("records", [])
+    if records:
+        df = pd.DataFrame(records)
+        st.success("Dados carregados com sucesso!")
+
+        # Exibir tabela de dados
+        st.dataframe(df)
+
+        # Filtros interativos
+        bairros = df['bairro'].unique()
+        bairro_selecionado = st.selectbox("Selecione um bairro", bairros)
+        df_filtrado = df[df['bairro'] == bairro_selecionado]
+        st.dataframe(df_filtrado)
+
+        # Você pode adicionar mais visualizações ou análises aqui
+
+    else:
+        st.warning("Nenhum dado encontrado para o recurso especificado.")
+else:
+    st.error("Erro ao buscar dados da coleta de lixo.")import streamlit as st
+import pandas as pd
+import requests
+
+st.set_page_config(page_title="Coleta de Lixo Urbano - Recife", layout="wide")
+st.title("🗑️ Coleta de Lixo Urbano - Recife")
+
+# Endpoint base da API
+API_URL = "http://dados.recife.pe.gov.br/api/3/action/datastore_search"
+RESOURCE_ID = "5b96a34d-06c9-4103-9717-1fdf0af5aee1"
+
+# Parâmetros da consulta
+params = {
+    "resource_id": RESOURCE_ID,
+    "limit": 100  # Número de registros a serem buscados
+}
+
+# Requisição à API
+response = requests.get(API_URL, params=params)
+
+if response.status_code == 200:
+    data = response.json()
+    records = data.get("result", {}).get("records", [])
+    if records:
+        df = pd.DataFrame(records)
+        st.success("Dados carregados com sucesso!")
+
+        # Exibir tabela de dados
+        st.dataframe(df)
+
+        # Filtros interativos
+        bairros = df['bairro'].unique()
+        bairro_selecionado = st.selectbox("Selecione um bairro", bairros)
+        df_filtrado = df[df['bairro'] == bairro_selecionado]
+        st.dataframe(df_filtrado)
+
+        # Você pode adicionar mais visualizações ou análises aqui
+
+    else:
+        st.warning("Nenhum dado encontrado para o recurso especificado.")
+else:
+    st.error("Erro ao buscar dados da coleta de lixo.")import streamlit as st
+import pandas as pd
+import requests
+
+st.set_page_config(page_title="Coleta de Lixo Urbano - Recife", layout="wide")
+st.title("🗑️ Coleta de Lixo Urbano - Recife")
+
+# Endpoint base da API
+API_URL = "http://dados.recife.pe.gov.br/api/3/action/datastore_search"
+RESOURCE_ID = "5b96a34d-06c9-4103-9717-1fdf0af5aee1"
+
+# Parâmetros da consulta
+params = {
+    "resource_id": RESOURCE_ID,
+    "limit": 100  # Número de registros a serem buscados
+}
+
+# Requisição à API
+response = requests.get(API_URL, params=params)
+
+if response.status_code == 200:
+    data = response.json()
+    records = data.get("result", {}).get("records", [])
+    if records:
+        df = pd.DataFrame(records)
+        st.success("Dados carregados com sucesso!")
+
+        # Exibir tabela de dados
+        st.dataframe(df)
+
+        # Filtros interativos
+        bairros = df['bairro'].unique()
+        bairro_selecionado = st.selectbox("Selecione um bairro", bairros)
+        df_filtrado = df[df['bairro'] == bairro_selecionado]
+        st.dataframe(df_filtrado)
+
+        # Você pode adicionar mais visualizações ou análises aqui
+
+    else:
+        st.warning("Nenhum dado encontrado para o recurso especificado.")
+else:
+    st.error("Erro ao buscar dados da coleta de lixo.")
+
+
+import streamlit as st
 import folium
 from streamlit_folium import folium_static
 import pandas as pd
@@ -85,17 +211,7 @@ elif aba == "Infraestrutura e Serviços":
     st.subheader("🏗️ Monitoramento de Infraestrutura Urbana")
     st.info("📡 Módulo em desenvolvimento com dados sobre semáforos, câmeras e sensores")
 
-st.set_page_config(page_title="Coleta de Lixo Urbano - Recife", layout="wide")
-st.title("🗑️ Coleta de Lixo Urbano - Recife")
 
-# Endpoint base da API
-API_URL = "http://dados.recife.pe.gov.br/api/3/action/datastore_search"
-RESOURCE_ID = "5b96a34d-06c9-4103-9717-1fdf0af5aee1"
-
-# Parâmetros da consulta
-params = {
-    "resource_id": RESOURCE_ID,
-    "limit": 100  # Número de registros a serem buscados
 
 # Chatbot
 elif aba == "Chatbot":
