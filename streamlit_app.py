@@ -55,14 +55,6 @@ if aba == "Mapa Interativo":
 
     folium_static(mapa)
 
-# Ocorrências 156
-elif aba == "Ocorrências 156":
-    st.header("📋 Solicitações 156 em Tempo Real")
-    try:
-        df_156 = pd.read_csv("156_cco_diario.csv.csv")
-        st.dataframe(df_156.head())
-    except Exception as e:
-        st.error(f"Erro ao carregar o arquivo 156_cco_diario.csv: {e}")
 # Chamados SEDEC
 elif aba == "Chamados SEDEC":
     st.header("🚨 Chamados SEDEC em Tempo Real")
