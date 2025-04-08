@@ -63,3 +63,22 @@ elif aba == "Chatbot":
     st.subheader("🤖 Chatbot de Mobilidade")
     st.info("Em breve: Assistente virtual para dúvidas e sugestões.")
 
+
+if aba == "Rotas e Informações em Tempo Real":
+    st.subheader("🚶‍♀️ Rotas e Situações em Tempo Real")
+
+    # Criação do mapa com base em localização central (Recife)
+    mapa_usuario = folium.Map(location=[-8.0476, -34.8770], zoom_start=13)
+
+    # Pontos simulados (paradas, acidentes, obras etc.)
+    folium.Marker([-8.05, -34.88], tooltip="Parada de ônibus - Linha 101", icon=folium.Icon(color="blue", icon="bus", prefix='fa')).add_to(mapa_usuario)
+    folium.Marker([-8.04, -34.875], tooltip="Obra - Interdição parcial", icon=folium.Icon(color="orange", icon="wrench", prefix='fa')).add_to(mapa_usuario)
+    folium.Marker([-8.045, -34.873], tooltip="Zona Azul disponível", icon=folium.Icon(color="green", icon="car", prefix='fa')).add_to(mapa_usuario)
+    folium.Marker([-8.043, -34.872], tooltip="Acidente recente", icon=folium.Icon(color="red", icon="exclamation-triangle", prefix='fa')).add_to(mapa_usuario)
+
+    st.markdown("### 🗺️ Mapa da cidade com eventos em tempo real")
+    folium_static(mapa_usuario)
+
+    st.markdown("Você também pode **reportar uma ocorrência** ou verificar **rotas alternativas** em breve.")
+
+
