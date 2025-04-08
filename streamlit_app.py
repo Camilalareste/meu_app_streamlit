@@ -89,3 +89,69 @@ elif aba == "Infraestrutura e Serviços":
 elif aba == "Chatbot":
     st.subheader("🤖 Chatbot Inteligente para Dúvidas sobre Mobilidade")
     st.info("💬 Em breve integração com modelo conversacional para responder dúvidas do cidadão.")
+
+import streamlit as st
+import folium
+from streamlit_folium import folium_static
+import random
+from datetime import datetime
+
+# Configurações da página
+st.set_page_config(page_title="Plataforma de Mobilidade", layout="wide")
+st.title("🚦 Plataforma de Mobilidade Urbana Inteligente")
+
+# Menu lateral
+aba = st.sidebar.radio("Menu Principal", (
+    "Rotas e Informações em Tempo Real",
+    "Ocorrências 156",
+    "Chamados SEDEC",
+    "Infraestrutura e Serviços",
+    "Chatbot"
+))
+
+# Simulador de dados em tempo real (hipotético)
+if aba == "Rotas e Informações em Tempo Real":
+    st.header("📍 Situação em Tempo Real")
+
+    # Localização base
+    latitude_base = -8.0476
+    longitude_base = -34.8770
+    mapa = folium.Map(location=[latitude_base, longitude_base], zoom_start=13)
+
+    # Exemplo de ocorrências no mapa
+    ocorrencias = [
+        {"tipo": "Acidente", "lat": -8.045, "lon": -34.875, "descricao": "Colisão leve"},
+        {"tipo": "Obra", "lat": -8.050, "lon": -34.880, "descricao": "Recapeamento asfáltico"},
+        {"tipo": "Zona Azul", "lat": -8.048, "lon": -34.870, "descricao": "Estacionamento disponível"},
+        {"tipo": "Alagamento", "lat": -8.052, "lon": -34.882, "descricao": "Ponto de alagamento ativo"},
+        {"tipo": "Fiscalização", "lat": -8.049, "lon": -34.878, "descricao": "Blitz em andamento"}
+    ]
+
+    # Ícones personalizados por tipo
+    icones = {
+        "Acidente": "🚗",
+        "Obra": "🚧",
+        "Zona Azul": "🅿️",
+        "Alagamento": "🌧️",
+        "Fiscalização": "👮"
+    }
+
+    for o in ocorrencias:
+        folium.Marker(
+            location=[o["lat"], o["lon"]],
+            popup=f'{icones[o["tipo"]]} {o["tipo"]}: {o["descricao"]}',
+            tooltip=o["tipo"],
+            icon=folium.Icon(color="blue" if o["tipo"] == "Zona Azul" else "red")
+        ).add_to(mapa)
+
+    folium_static(mapa)
+
+    st.subheader("ℹ️ Dicas baseadas nos dados")
+    st.markdown("""
+    - Evite a Av. X por causa de um acidente.
+    - Estacionamentos Zona Azul disponíveis na Rua Y.
+    - Alerta de alagamento na região do bairro Z.
+    - Tempo estimado até o centro: **32 minutos**.
+    """)
+
+
