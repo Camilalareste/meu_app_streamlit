@@ -85,6 +85,18 @@ elif aba == "Infraestrutura e Serviços":
     st.subheader("🏗️ Monitoramento de Infraestrutura Urbana")
     st.info("📡 Módulo em desenvolvimento com dados sobre semáforos, câmeras e sensores")
 
+st.set_page_config(page_title="Coleta de Lixo Urbano - Recife", layout="wide")
+st.title("🗑️ Coleta de Lixo Urbano - Recife")
+
+# Endpoint base da API
+API_URL = "http://dados.recife.pe.gov.br/api/3/action/datastore_search"
+RESOURCE_ID = "5b96a34d-06c9-4103-9717-1fdf0af5aee1"
+
+# Parâmetros da consulta
+params = {
+    "resource_id": RESOURCE_ID,
+    "limit": 100  # Número de registros a serem buscados
+
 # Chatbot
 elif aba == "Chatbot":
     st.subheader("🤖 Chatbot Inteligente para Dúvidas sobre Mobilidade")
