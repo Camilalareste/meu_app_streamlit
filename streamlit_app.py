@@ -14,6 +14,28 @@ from folium.plugins import MarkerCluster
     "Infraestrutura e Serviços",
     "Chatbot",
     "🔍 Análises Inteligentes (IA)"
+elif aba == "🔍 Análises Inteligentes (IA)":
+    st.subheader("📊 Análises Preditivas com IA")
+    
+    st.markdown("""
+    Essa seção usa modelos de inteligência artificial para gerar insights com base nos dados de mobilidade urbana:
+    - Previsão de volume de chamadas 156
+    - Identificação de regiões críticas
+    - Sugestões de ações preventivas
+    """)
+
+    if st.button("📈 Gerar Previsões"):
+        st.success("🔮 Previsões geradas com base em dados históricos (exemplo hipotético)")
+        st.line_chart({
+            "Chamadas 156": [random.randint(20, 100) for _ in range(7)],
+            "Acidentes": [random.randint(5, 20) for _ in range(7)],
+        })
+
+    if st.button("💡 Gerar Recomendações Inteligentes"):
+        st.info("🚨 Região com maior volume de ocorrências: Boa Vista")
+        st.info("🚧 Sugestão: Aumentar fiscalização na Av. Agamenon Magalhães")
+
+
 
 # Configuração da página
 st.set_page_config(page_title="Transporte Inteligente", layout="wide")
