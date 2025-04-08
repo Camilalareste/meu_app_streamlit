@@ -4,65 +4,70 @@ import folium
 from streamlit_folium import folium_static
 from datetime import datetime
 import openai
+import random
 
 st.set_page_config(page_title="Transporte Inteligente", layout="wide")
 
-# Cabeçalho
-st.title("📊 Transporte Inteligente - Dados em Tempo Real")
+st.title("🚦 Plataforma de Mobilidade Urbana Inteligente")
 st.markdown("Aplicativo para visualização de dados de mobilidade urbana e serviços públicos em tempo real no Recife.")
 
-# Layout com abas
-aba = st.sidebar.radio("Escolha uma opção:", ("Mapa Interativo", "Dados 156", "Chamados SEDEC", "Chatbot"))
+# Sidebar
+modo = st.sidebar.radio("👤 Modo de Visualização", ["Usuário", "Gestor"])
+st.sidebar.markdown("Veja informações úteis de transporte ao seu redor.")
 
-# Dados (você pode atualizar esses caminhos ou URLs)
-@st.cache_data
-def carregar_dados():
-    dados_156 = pd.read_csv("156_cco_diario.csv", sep=";")
-    sedec = pd.read_csv("sedec_chamados_tempo_real.csv", sep=";")
-    return dados_156, sedec
+# Abas
+aba = st.sidebar.radio("Navegação", ("Mapa Interativo", "Dados 156", "Chamados SEDEC", "Chatbot"))
 
-dados_156, sedec = carregar_dados()
+# Localização base Recife
+latitude_base = -8.0476
+longitude_base = -34.8770
 
+# Função para criar posições aleatórias perto da base
+def gerar_localizacoes(qtd=10):
+    return [[
+        latitude_base + random.uniform(-0.01, 0.01),
+        longitude_base + random.uniform(-0.01, 0.01)
+    ] for _ in range(qtd)]
+
+# Mapa Interativo
 if aba == "Mapa Interativo":
-    st.header("🗺️ Mapa Interativo - Chamados SEDEC")
-    
-    mapa = folium.Map(location=[-8.0476, -34.8770], zoom_start=12)
-    
-    for _, row in sedec.iterrows():
-        if pd.notna(row.get("LAT")) and pd.notna(row.get("LNG")):
-            folium.CircleMarker(
-                location=[row["LAT"], row["LNG"]],
-                radius=4,
-                color="blue",
-                fill=True,
-                fill_opacity=0.6,
-                popup=f"{row.get('SERVICO', '')} - {row.get('BAIRRO', '')}"
-            ).add_to(mapa)
-    
-    folium_static(mapa)
+    st.subheader("🗺️ Mapa Interativo de Ocorrências e Serviços")
+    m = folium.Map(location=[latitude_base, longitude_base], zoom_start=13)
+    for loc in gerar_localizacoes(15):
+        folium.Marker(location=loc, icon=folium.Icon(color="red"), popup="Ocorrência").add_to(m)
+    folium_static(m)
 
+# Dados 156
 elif aba == "Dados 156":
-    st.header("📄 Dados de Solicitações 156")
-    st.dataframe(dados_156)
+    st.subheader("📋 Solicitações 156 em Tempo Real")
+    try:
+        df_156 = pd.read_csv("156_cco_diario.csv")
+        st.dataframe(df_156)
+    except:
+        st.error("Erro ao carregar o arquivo 156_cco_diario.csv")
 
+# Chamados SEDEC
 elif aba == "Chamados SEDEC":
-    st.header("🚨 Chamados da Defesa Civil (SEDEC)")
-    st.dataframe(sedec)
+    st.subheader("🚨 Chamados SEDEC em Tempo Real")
+    try:
+        df_sedec = pd.read_csv("sedec_chamados_tempo_real.csv")
+        st.dataframe(df_sedec)
+    except:
+        st.error("Erro ao carregar o arquivo sedec_chamados_tempo_real.csv")
 
+# Chatbot
 elif aba == "Chatbot":
-    st.header("🤖 Assistente IA - Mobilidade Urbana")
-    pergunta = st.text_input("Digite sua pergunta sobre os dados:")
-
-    if pergunta:
-        openai.api_key = st.secrets["OPENAI_API_KEY"]
-        with st.spinner("Analisando com IA..."):
-            resposta = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                messages=[
-                    {"role": "system", "content": "Você é um assistente que analisa dados de mobilidade urbana do Recife."},
-                    {"role": "user", "content": pergunta}
-                ]
-            )
-            st.success(resposta.choices[0].message["content"])
+    st.subheader("🤖 Assistente Inteligente")
+    user_input = st.text_input("Digite sua pergunta:")
+    if user_input:
+        with st.spinner("Pensando..."):
+            try:
+                resposta = openai.ChatCompletion.create(
+                    model="gpt-3.5-turbo",
+                    messages=[{"role": "user", "content": user_input}]
+                )
+                st.success(resposta.choices[0].message['content'])
+            except Exception as e:
+                st.error(f"Erro ao processar resposta: {e}")
 
 
