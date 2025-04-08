@@ -63,7 +63,6 @@ elif aba == "Ocorrências 156":
         st.dataframe(df_156.head())
     except Exception as e:
         st.error(f"Erro ao carregar o arquivo 156_cco_diario.csv: {e}")
-
 # Chamados SEDEC
 elif aba == "Chamados SEDEC":
     st.header("🚨 Chamados SEDEC em Tempo Real")
