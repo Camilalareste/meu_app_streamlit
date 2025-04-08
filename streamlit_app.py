@@ -121,6 +121,7 @@ elif aba == "Chatbot":
             resposta_texto = resposta.choices[0].message["content"]
             st.session_state.mensagens.append({"role": "assistant", "content": resposta_texto})
             st.success(resposta_texto)
+            
 
     except Exception as e:
         st.error(f"Erro ao usar o Chatbot: {e}")
