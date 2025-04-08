@@ -55,14 +55,71 @@ if aba == "Mapa Interativo":
 
     folium_static(mapa)
 
-# Chamados SEDEC
-elif aba == "Chamados SEDEC":
-    st.header("🚨 Chamados SEDEC em Tempo Real")
-    try:
-        df_sedec = pd.read_csv("sedec_chamados_tempo_real.csv.csv")
-        st.dataframe(df_sedec.head())
-    except Exception as e:
-        st.error(f"Erro ao carregar o arquivo sedec_chamados_tempo_real.csv: {e}")
+import requests
+import pandas as pd
+import streamlit as st
+
+st.title("🚦 Plataforma de Mobilidade Urbana Inteligente")
+st.subheader("📋 Solicitações 156 em Tempo Real")
+
+# URL da API CKAN para consulta de dados
+url_api = "http://dados.recife.pe.gov.br/api/3/action/datastore_search"
+
+# ID do recurso do dataset 156 (você pode ver isso na página do dataset)
+resource_id = "9afa68cf-7fd9-4735-b157-e23da873fef7"  # esse é o ID da tabela do 156 CCO
+
+# Parâmetros da requisição
+params = {
+    "resource_id": resource_id,
+    "limit": 1000  # limite de registros que você quer puxar
+}
+
+# Requisição à API
+try:
+    response = requests.get(url_api, params=params)
+    response.raise_for_status()  # Verifica se deu erro
+    data = response.json()
+
+    # Extrai os dados do campo "records"
+    df_156 = pd.DataFrame(data["result"]["records"])
+
+    st.success("✅ Dados 156 carregados com sucesso da API!")
+    st.dataframe(df_156)
+except Exception as e:
+    st.error(f"❌ Erro ao acessar a API: {e}")
+import requests
+import pandas as pd
+import streamlit as st
+
+st.title("🚦 Plataforma de Mobilidade Urbana Inteligente")
+st.subheader("📋 Solicitações 156 em Tempo Real")
+
+# URL da API CKAN para consulta de dados
+url_api = "http://dados.recife.pe.gov.br/api/3/action/datastore_search"
+
+# ID do recurso do dataset 156 (você pode ver isso na página do dataset)
+resource_id = "9afa68cf-7fd9-4735-b157-e23da873fef7"  # esse é o ID da tabela do 156 CCO
+
+# Parâmetros da requisição
+params = {
+    "resource_id": resource_id,
+    "limit": 1000  # limite de registros que você quer puxar
+}
+
+# Requisição à API
+try:
+    response = requests.get(url_api, params=params)
+    response.raise_for_status()  # Verifica se deu erro
+    data = response.json()
+
+    # Extrai os dados do campo "records"
+    df_156 = pd.DataFrame(data["result"]["records"])
+
+    st.success("✅ Dados 156 carregados com sucesso da API!")
+    st.dataframe(df_156)
+except Exception as e:
+    st.error(f"❌ Erro ao acessar a API: {e}")
+
 
 # Infraestrutura e Serviços
 elif aba == "Infraestrutura e Serviços":
