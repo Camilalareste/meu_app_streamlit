@@ -164,7 +164,7 @@ elif aba == "Análises e Previsões (IA)":
         st.info("🚨 Região com maior volume de ocorrências: Boa Vista")
         st.info("🚧 Sugestão: Aumentar fiscalização na Av. Agamenon Magalhães")
          Plataforma de Mobilidade Urbana Inteligente
-📊 Análises e Previsões com IA
+st.subheader("Análises e Previsões com IA")
 Essa seção usa modelos de inteligência artificial para gerar insights:
 
 Previsão de volume de chamadas 156 (Prophet/ARIMA - Em breve)
