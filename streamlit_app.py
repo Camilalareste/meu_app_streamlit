@@ -53,3 +53,8 @@ elif aba == "Ocorrências 156":
         st.warning("⚠️ Nenhum dado de mobilidade 2 encontrado.")
 
 # ... (rest of the code)
+
+File "/mount/src/meu_app_streamlit/streamlit_app.py", line 35
+  elif aba == "Ocorrências 156":
+  ^
+SyntaxError: invalid syntax
