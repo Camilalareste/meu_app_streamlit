@@ -4,66 +4,56 @@ import folium
 from streamlit_folium import folium_static
 from datetime import datetime
 import random
+import openai
 
-# Configuração inicial da página
-st.set_page_config(page_title="Plataforma de Mobilidade Urbana Inteligente", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="Transporte Inteligente", layout="wide")
+
 st.title("🚦 Plataforma de Mobilidade Urbana Inteligente")
 
-# Sidebar - Navegação entre abas
-aba = st.sidebar.radio("Escolha uma opção:", [
-    "Mapa Interativo",
-    "Ocorrências 156",
-    "Chamados SEDEC",
-    "Infraestrutura e Serviços",
-    "Chatbot"
-])
+# Sidebar com modo de visualização
+modo = st.sidebar.radio("👤 Modo de Visualização", ["Usuário", "Gestor"])
+aba = st.sidebar.radio("Escolha uma opção:", ("Mapa Interativo", "Ocorrências 156", "Chamados SEDEC", "Infraestrutura e Serviços", "Chatbot"))
 
-# Função para gerar dados fictícios
+# Base do mapa - Recife
+latitude_base = -8.0476
+longitude_base = -34.8770
 
-def gerar_dados_ficticios(categoria, n=10):
-    base_lat, base_lon = -8.0476, -34.8770
-    dados = []
-    for _ in range(n):
-        dados.append({
-            "categoria": categoria,
-            "latitude": base_lat + random.uniform(-0.01, 0.01),
-            "longitude": base_lon + random.uniform(-0.01, 0.01),
-            "descricao": f"Ocorrência de {categoria}",
-            "horario": datetime.now().strftime("%H:%M")
-        })
-    return pd.DataFrame(dados)
+# Função de dados simulados para infraestruturas
+infraestruturas = [
+    {"tipo": "Coleta de Lixo", "icone": "trash", "cor": "green"},
+    {"tipo": "Ônibus Escolar", "icone": "graduation-cap", "cor": "orange"},
+    {"tipo": "Metrô", "icone": "subway", "cor": "blue"},
+    {"tipo": "Emergência", "icone": "plus", "cor": "red"},
+    {"tipo": "Trânsito", "icone": "car", "cor": "darkred"},
+    {"tipo": "Estacionamento Zona Azul", "icone": "parking", "cor": "cadetblue"}
+]
 
-# Dados fictícios
-categorias = ["Lixo", "Escolar", "Metrô", "Emergência", "Trânsito", "Estacionamento"]
-dados_por_categoria = {cat: gerar_dados_ficticios(cat) for cat in categorias}
+def gerar_pontos(tipo):
+    return [
+        {
+            "lat": latitude_base + random.uniform(-0.01, 0.01),
+            "lon": longitude_base + random.uniform(-0.01, 0.01),
+            "descricao": f"{tipo} ativo em {datetime.now().strftime('%H:%M:%S')}"
+        }
+        for _ in range(random.randint(2, 5))
+    ]
 
-# Mapa Interativo
 if aba == "Mapa Interativo":
-    st.header("🗺️ Mapa Interativo com Ocorrências e Infraestrutura")
-    mapa = folium.Map(location=[-8.0476, -34.8770], zoom_start=13)
+    st.header("🗺️ Mapa Interativo de Serviços e Infraestrutura")
+    m = folium.Map(location=[latitude_base, longitude_base], zoom_start=13)
 
-    # Adiciona pinos de cada categoria
-    icones = {
-        "Lixo": "trash",
-        "Escolar": "graduation-cap",
-        "Metrô": "subway",
-        "Emergência": "ambulance",
-        "Trânsito": "car",
-        "Estacionamento": "parking"
-    }
-
-    for cat, df in dados_por_categoria.items():
-        for _, row in df.iterrows():
+    for infra in infraestruturas:
+        pontos = gerar_pontos(infra['tipo'])
+        for ponto in pontos:
             folium.Marker(
-                [row["latitude"], row["longitude"]],
-                popup=f"{cat}: {row['descricao']}\nHorário: {row['horario']}",
-                icon=folium.Icon(color="blue", icon=icones[cat], prefix='fa')
-            ).add_to(mapa)
+                location=[ponto['lat'], ponto['lon']],
+                popup=ponto['descricao'],
+                icon=folium.Icon(color=infra['cor'], icon=infra['icone'], prefix='fa')
+            ).add_to(m)
 
-    folium_static(mapa)
+    folium_static(m, width=1100)
 
-# Ocorrências 156
-elif aba == "Ocorrências 156":
+if aba == "Ocorrências 156":
     st.header("📋 Solicitações 156 em Tempo Real")
     try:
         df_156 = pd.read_csv("156_cco_diario.csv")
@@ -71,30 +61,23 @@ elif aba == "Ocorrências 156":
     except Exception as e:
         st.error(f"Erro ao carregar o arquivo 156_cco_diario.csv: {e}")
 
-# Chamados SEDEC
-elif aba == "Chamados SEDEC":
-    st.header("🚨 Chamados SEDEC em Tempo Real")
+if aba == "Chamados SEDEC":
+    st.header("📟 Chamados SEDEC em Tempo Real")
     try:
         df_sedec = pd.read_csv("sedec_chamados_tempo_real.csv")
         st.dataframe(df_sedec)
     except Exception as e:
         st.error(f"Erro ao carregar o arquivo sedec_chamados_tempo_real.csv: {e}")
 
-# Infraestrutura e Serviços
-elif aba == "Infraestrutura e Serviços":
-    st.header("🔧 Visão Geral da Infraestrutura e Serviços")
-    aba_servico = st.selectbox("Escolha a categoria:", categorias)
-    st.subheader(f"Ocorrências de {aba_servico}")
-    import os
+if aba == "Infraestrutura e Serviços":
+    st.header("🏗️ Infraestrutura e Serviços Urbanos")
+    for infra in infraestruturas:
+        st.subheader(f"🔹 {infra['tipo']}")
+        dados = gerar_pontos(infra['tipo'])
+        st.table(pd.DataFrame(dados))
 
-# Listar os arquivos disponíveis no diretório atual para verificar os nomes e caminhos
-os.listdir("/mnt/data")
-
-    st.dataframe(dados_por_categoria[aba_servico])
-
-# Chatbot (simples)
-elif aba == "Chatbot":
-    st.header("🤖 Chatbot de Atendimento")
-    pergunta = st.text_input("Digite sua pergunta sobre mobilidade urbana:")
+if aba == "Chatbot":
+    st.header("🤖 Assistente Virtual")
+    pergunta = st.text_input("Digite sua pergunta:")
     if pergunta:
-        st.write(f"🔎 Ainda estamos treinando nosso assistente. Sua pergunta foi: '{pergunta}'")
+        st.info("Chatbot em construção. Em breve você poderá interagir com um assistente inteligente!")
