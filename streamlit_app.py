@@ -163,3 +163,64 @@ elif aba == "Análises e Previsões (IA)":
     if st.button("💡 Gerar Recomendações Inteligentes"):
         st.info("🚨 Região com maior volume de ocorrências: Boa Vista")
         st.info("🚧 Sugestão: Aumentar fiscalização na Av. Agamenon Magalhães")
+         Plataforma de Mobilidade Urbana Inteligente
+📊 Análises e Previsões com IA
+Essa seção usa modelos de inteligência artificial para gerar insights:
+
+Previsão de volume de chamadas 156 (Prophet/ARIMA - Em breve)
+Identificação de áreas críticas (KMeans - Em breve)
+Classificação de ocorrências (NLP - Em breve)
+Detecção de anomalias (Em breve)
+import streamlit as st
+import folium
+from streamlit_folium import folium_static
+import pandas as pd
+import random
+import requests
+from folium.plugins import MarkerCluster
+import plotly.express as px  # For plotting charts
+
+# Import for AI features, handling potential errors
+try:
+    from prophet import Prophet
+    from sklearn.cluster import KMeans
+except ImportError:
+    st.warning("Some AI features might not be available. Install 'prophet' and 'scikit-learn' for full functionality.")
+def prever_chamadas_156():
+    # Your Prophet/ARIMA implementation will go here
+    st.info("Previsão de chamadas 156 em desenvolvimento.")
+
+def identificar_areas_criticas():
+    # Your KMeans implementation will go here
+    st.info("Identificação de áreas críticas em desenvolvimento.")
+
+def classificar_ocorrencias():
+    # Your NLP implementation will go here
+    st.info("Classificação de ocorrências em desenvolvimento.")
+
+def detectar_anomalias():
+    # Your anomaly detection implementation will go here
+    st.info("Detecção de anomalias em desenvolvimento.")
+elif aba == "Análises e Previsões (IA)":
+    st.subheader("📊 Análises e Previsões com IA")
+    st.markdown("""
+    Essa seção usa modelos de inteligência artificial para gerar insights:
+    - Previsão de volume de chamadas 156
+    - Identificação de áreas críticas
+    - Classificação de ocorrências
+    - Detecção de anomalias
+    """)
+
+    if st.button("📈 Gerar Previsões"):
+        prever_chamadas_156()  # Call the function
+
+    if st.button("📍 Identificar Áreas Críticas"):
+        identificar_areas_criticas()  # Call the function
+
+    # Add buttons for other AI features
+    if st.button("📝 Classificar Ocorrências"):
+        classificar_ocorrencias()
+
+    if st.button("⚠️ Detectar Anomalias"):
+        detectar_anomalias()
+        
