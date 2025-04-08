@@ -138,4 +138,28 @@ if response.status_code == 200:
     st.success("Dados 156 carregados com sucesso da API!")
 else:
     st.error("Erro ao carregar dados 156 da API.")
+import pandas as pd
+import requests
+import streamlit as st
+
+st.subheader("📋 Solicitações 156 em Tempo Real")
+
+try:
+    url_api = "http://dados.recife.pe.gov.br/api/3/action/datastore_search"
+    params = {
+        "resource_id": "9afa68cf-7fd9-4735-b157-e23da873fef7",
+        "limit": 1000  # pode ajustar o limite conforme necessidade
+    }
+
+    response = requests.get(url_api, params=params)
+    data = response.json()
+
+    records = data['result']['records']
+    df_156 = pd.DataFrame.from_records(records)
+
+    st.success("✅ Dados 156 carregados com sucesso da API!")
+    st.dataframe(df_156)
+
+except Exception as e:
+    st.error(f"Erro ao carregar dados da API: {e}")
 
