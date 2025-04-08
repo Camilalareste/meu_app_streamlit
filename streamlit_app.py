@@ -7,6 +7,14 @@ from datetime import datetime
 import requests
 from folium.plugins import MarkerCluster
 
+# aba = st.sidebar.radio("Menu Principal", (
+    "Mapa Interativo",
+    "Ocorrências 156",
+    "Chamados SEDEC",
+    "Infraestrutura e Serviços",
+    "Chatbot",
+    "🔍 Análises Inteligentes (IA)"
+
 # Configuração da página
 st.set_page_config(page_title="Transporte Inteligente", layout="wide")
 
