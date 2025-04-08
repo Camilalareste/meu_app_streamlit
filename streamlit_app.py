@@ -1,21 +1,20 @@
- 
-import streamlit as st
-import pandas as pd
-import requests
+mport streamlit as st
 import folium
 from streamlit_folium import folium_static
+import pandas as pd
+import random
 from datetime import datetime
-# import openai  # Descomente se for usar o ChatGPT
+import requests
 
 # Configuração da página
 st.set_page_config(page_title="Transporte Inteligente", layout="wide")
 
 # Título principal
-st.title("🚦 Plataforma de Mobilidade Urbana Inteligente")
+st.title("\U0001F6A6 Plataforma de Mobilidade Urbana Inteligente")
 
 # Sidebar: modo de visualização e menu principal
-modo = st.sidebar.radio("👤 Modo de Visualização", ["Usuário", "Gestor"])
-aba = st.sidebar.radio("📂 Menu Principal", (
+modo = st.sidebar.radio("\U0001F464 Modo de Visualização", ["Usuário", "Gestor"])
+aba = st.sidebar.radio("Menu Principal", (
     "Mapa Interativo",
     "Ocorrências 156",
     "Chamados SEDEC",
@@ -23,65 +22,62 @@ aba = st.sidebar.radio("📂 Menu Principal", (
     "Chatbot"
 ))
 
-# Função para carregar dados 156 via API CKAN
-@st.cache_data
-def carregar_dados_156():
-    resource_id = "9afa68cf-7fd9-4735-b157-e23da873fef7"  # ID do recurso CSV
-    url = f"http://dados.recife.pe.gov.br/api/3/action/datastore_search?resource_id={resource_id}&limit=1000"
-    try:
-        response = requests.get(url)
-        data = response.json()
-        records = data['result']['records']
-        df = pd.DataFrame.from_records(records)
-        return df
-    except Exception as e:
-        st.error(f"Erro ao carregar dados da API 156: {e}")
-        return pd.DataFrame()
+# Base de localização (Recife)
+latitude_base = -8.0476
+longitude_base = -34.8770
 
-# 📍 Aba: Ocorrências 156
-if aba == "Ocorrências 156":
-    st.subheader("📋 Solicitações 156 em Tempo Real")
+# Função: Dados simulados de ônibus
+def gerar_onibus():
+    return [
+        {"linha": "101", "lat": latitude_base + random.uniform(-0.01, 0.01), "lon": longitude_base + random.uniform(-0.01, 0.01)},
+        {"linha": "102", "lat": latitude_base + random.uniform(-0.01, 0.01), "lon": longitude_base + random.uniform(-0.01, 0.01)},
+        {"linha": "103", "lat": latitude_base + random.uniform(-0.01, 0.01), "lon": longitude_base + random.uniform(-0.01, 0.01)}
+    ]
 
-    df_156 = carregar_dados_156()
-
-    if not df_156.empty:
-        st.success("✅ Dados 156 carregados com sucesso da API!")
-        st.dataframe(df_156.head(20), use_container_width=True)
-    else:
-        st.warning("⚠️ Não foi possível carregar os dados do 156.")
-
-# 🗺️ Aba: Mapa Interativo
-elif aba == "Mapa Interativo":
-    st.subheader("🗺️ Mapa Interativo de Mobilidade")
-    
-    m = folium.Map(location=[-8.0476, -34.8770], zoom_start=12)
-    folium.Marker(
-        [-8.0476, -34.8770],
-        tooltip="Prefeitura do Recife",
-        icon=folium.Icon(color='blue')
-    ).add_to(m)
-
+# Aba: Mapa Interativo
+if aba == "Mapa Interativo":
+    st.subheader("\U0001F4CD Mapa em Tempo Real")
+    m = folium.Map(location=[latitude_base, longitude_base], zoom_start=13)
+    for onibus in gerar_onibus():
+        folium.Marker([
+            onibus["lat"], onibus["lon"]
+        ], popup=f"Linha {onibus['linha']}", icon=folium.Icon(color="blue", icon="bus", prefix="fa")).add_to(m)
     folium_static(m)
 
-# 📊 Aba: Chamados SEDEC
+# Aba: Ocorrências 156
+elif aba == "Ocorrências 156":
+    st.subheader("\U0001F4CB Solicitações 156 em Tempo Real")
+    resource_id = "9afa68cf-7fd9-4735-b157-e23da873fef7"
+    api_url = f"https://dados.recife.pe.gov.br/api/3/action/datastore_search?resource_id={resource_id}&limit=100"
+
+    try:
+        response = requests.get(api_url)
+        data = response.json()
+        if data.get("success"):
+            df = pd.DataFrame(data["result"]["records"])
+            st.success("\u2705 Dados 156 carregados com sucesso da API!")
+            st.dataframe(df)
+        else:
+            st.error("\u274C Erro ao acessar a API CKAN.")
+    except Exception as e:
+        st.error(f"Erro ao carregar os dados: {e}")
+
+# Aba: Chamados SEDEC
 elif aba == "Chamados SEDEC":
-    st.subheader("📊 Chamados SEDEC")
-    st.info("🚧 Em desenvolvimento: aqui serão exibidos os chamados em tempo real da Defesa Civil (SEDEC).")
+    st.subheader("\U0001F4CA Chamados SEDEC (em construção)")
+    st.info("Este módulo está em desenvolvimento.")
 
-# 🏗️ Aba: Infraestrutura e Serviços
+# Aba: Infraestrutura e Serviços
 elif aba == "Infraestrutura e Serviços":
-    st.subheader("🏗️ Infraestrutura e Monitoramento")
-    st.info("🚧 Em breve: visualização de câmeras, equipamentos de fiscalização e semáforos inteligentes.")
+    st.subheader("\U0001F3D7\ufe0f Infraestrutura Urbana")
+    st.info("Em breve: dados de câmeras, fiscalização e estruturas viárias.")
 
-# 🤖 Aba: Chatbot
+# Aba: Chatbot
 elif aba == "Chatbot":
-    st.subheader("🤖 Assistente Virtual de Mobilidade")
-    st.info("🚧 Em breve: Chatbot com inteligência artificial para atendimento ao cidadão.")
-    # openai.api_key = "sua-chave-aqui"
-    # user_question = st.text_input("Pergunte algo sobre mobilidade urbana:")
-    # if st.button("Enviar") and user_question:
-    #     response = openai.ChatCompletion.create(
-    #         model="gpt-3.5-turbo",
-    #         messages=[{"role": "user", "content": user_question}]
-    #     )
-    #     st.write(response.choices[0].message["content"])
+    st.subheader("\U0001F916 Assistente Virtual")
+    st.markdown("Chatbot será integrado para tirar dúvidas sobre mobilidade urbana.")
+
+# Rodapé
+st.markdown("---")
+st.markdown("Desenvolvido por Camila Lareste • Dados: Prefeitura do Recife • v1.0")
+
