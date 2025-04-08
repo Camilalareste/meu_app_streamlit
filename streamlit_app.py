@@ -123,3 +123,43 @@ elif aba == "Infraestrutura e Serviços":
 elif aba == "Chatbot":
     st.subheader("🤖 Chatbot Inteligente para Dúvidas sobre Mobilidade")
     st.info("💬 Em breve integração com modelo conversacional para responder dúvidas do cidadão.")
+
+# ... other imports
+import random
+import requests
+# Add these imports
+import plotly.express as px  # For plotting charts
+
+# ... other imports
+import random
+import requests
+# Add these imports
+import plotly.express as px  # For plotting charts
+
+elif aba == "Análises e Previsões (IA)":
+    st.subheader("📊 Análises e Previsões com IA")
+    st.markdown("""
+    Essa seção usa modelos de inteligência artificial para gerar insights:
+    - Previsão de volume de chamadas 156
+    - Identificação de áreas críticas
+    - Classificação de ocorrências
+    - Detecção de anomalias
+    """)
+
+    if st.button("📈 Gerar Previsões"):
+        st.success("🔮 Previsões geradas com base em dados históricos (exemplo hipotético)")
+        
+        # Generate random data for demonstration
+        df_previsoes = pd.DataFrame({
+            "Dia": range(1, 8),  # Simulate 7 days
+            "Chamadas 156": [random.randint(20, 100) for _ in range(7)],
+            "Acidentes": [random.randint(5, 20) for _ in range(7)],
+        })
+
+        # Create a line chart using Plotly Express
+        fig = px.line(df_previsoes, x="Dia", y=["Chamadas 156", "Acidentes"], title="Previsões para os Próximos 7 Dias")
+        st.plotly_chart(fig)
+
+    if st.button("💡 Gerar Recomendações Inteligentes"):
+        st.info("🚨 Região com maior volume de ocorrências: Boa Vista")
+        st.info("🚧 Sugestão: Aumentar fiscalização na Av. Agamenon Magalhães")
