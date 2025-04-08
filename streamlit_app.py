@@ -85,6 +85,11 @@ elif aba == "Infraestrutura e Serviços":
     st.header("🔧 Visão Geral da Infraestrutura e Serviços")
     aba_servico = st.selectbox("Escolha a categoria:", categorias)
     st.subheader(f"Ocorrências de {aba_servico}")
+    import os
+
+# Listar os arquivos disponíveis no diretório atual para verificar os nomes e caminhos
+os.listdir("/mnt/data")
+
     st.dataframe(dados_por_categoria[aba_servico])
 
 # Chatbot (simples)
