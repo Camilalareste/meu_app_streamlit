@@ -95,6 +95,66 @@ st.sidebar.metric("Redução de CO₂", f"{round(random.uniform(5.0, 15.0), 2)} 
 st.caption(f"Atualizado em: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
 st.caption("Startup: VaiFácil + XYZ LogicFlow")
 
+import streamlit as st
+import pandas as pd
+import folium
+from streamlit_folium import folium_static
+from datetime import datetime
+import openai
+
+st.set_page_config(page_title="Transporte Inteligente", layout="wide")
+
+# Cabeçalho
+st.title("📊 Transporte Inteligente - Dados em Tempo Real")
+st.markdown("Aplicativo para visualização de dados de mobilidade urbana e serviços públicos em tempo real no Recife.")
+
+# Layout com abas
+aba = st.sidebar.radio("Escolha uma opção:", ("Mapa Interativo", "Dados 156", "Chamados SEDEC", "Chatbot"))
+
+if aba == "Mapa Interativo":
+    st.header("🗺️ Mapa Interativo das Faixas Azuis")
+    st.markdown("Visualize aqui as velocidades médias em tempo real nas vias de faixa azul do Recife.")
+    # Mapa base
+    mapa = folium.Map(location=[-8.0476, -34.8770], zoom_start=12)
+    folium.Marker(location=[-8.0476, -34.8770], popup="Exemplo de Ponto").add_to(mapa)
+    folium_static(mapa)
+
+elif aba == "Dados 156":
+    st.header("📞 Solicitações 156 - Tempo Real")
+    dados_156 = pd.read_csv("/mnt/data/156_cco_diario.csv")
+    st.dataframe(dados_156)
+
+elif aba == "Chamados SEDEC":
+    st.header("🚨 Chamados SEDEC - Tempo Real")
+    sedec = pd.read_csv("/mnt/data/sedec_chamados_tempo_real.csv")
+    st.dataframe(sedec)
+
+elif aba == "Chatbot":
+    st.header("🤖 Chatbot Inteligente")
+    st.markdown("Converse com nosso assistente sobre mobilidade urbana, serviços públicos e mais.")
+
+    openai.api_key = st.secrets["openai_api_key"]
+
+    if "mensagens" not in st.session_state:
+        st.session_state.mensagens = [
+            {"role": "system", "content": "Você é um assistente inteligente sobre mobilidade urbana e serviços públicos do Recife."}
+        ]
+
+    pergunta = st.text_input("Digite sua pergunta:")
+    if pergunta:
+        st.session_state.mensagens.append({"role": "user", "content": pergunta})
+        resposta = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=st.session_state.mensagens
+        )
+        msg = resposta.choices[0].message.content
+        st.session_state.mensagens.append({"role": "assistant", "content": msg})
+
+    for m in st.session_state.mensagens[1:]:
+        if m["role"] == "user":
+            st.markdown(f"**Você:** {m['content']}")
+        else:
+            st.markdown(f"**Assistente:** {m['content']}")
 
 
 
