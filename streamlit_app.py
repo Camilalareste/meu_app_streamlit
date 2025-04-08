@@ -136,7 +136,7 @@ import requests
 # Add these imports
 import plotly.express as px  # For plotting charts
 
-elif aba == "Análises e Previsões (IA)":
+if aba == "Mapa Interativo":
     st.subheader("📊 Análises e Previsões com IA")
     st.markdown("""
     Essa seção usa modelos de inteligência artificial para gerar insights:
@@ -146,7 +146,7 @@ elif aba == "Análises e Previsões (IA)":
     - Detecção de anomalias
     """)
 
-    if st.button("📈 Gerar Previsões"):
+  elif aba == "Ocorrências 156":
         st.success("🔮 Previsões geradas com base em dados históricos (exemplo hipotético)")
         
         # Generate random data for demonstration
@@ -155,7 +155,7 @@ elif aba == "Análises e Previsões (IA)":
             "Chamadas 156": [random.randint(20, 100) for _ in range(7)],
             "Acidentes": [random.randint(5, 20) for _ in range(7)],
         })
-
+elif aba == "Análises e Previsões (IA)": 
         # Create a line chart using Plotly Express
         fig = px.line(df_previsoes, x="Dia", y=["Chamadas 156", "Acidentes"], title="Previsões para os Próximos 7 Dias")
         st.plotly_chart(fig)
