@@ -114,3 +114,28 @@ elif aba == "Chatbot":
                 st.success(resposta.choices[0].message["content"])
             except Exception as e:
                 st.error(f"Erro no chatbot: {e}")
+
+import pandas as pd
+import requests
+
+# URL da API CKAN - Dataset 156 CCO Diário
+url_api = "http://dados.recife.pe.gov.br/api/3/action/datastore_search"
+
+# ID do recurso (resource_id da tabela 156)
+params = {
+    "resource_id": "9afa68cf-7fd9-4735-b157-e23da873fef7",  # ID da tabela 156_cco_diario.csv
+    "limit": 500  # Número de registros (ajuste conforme necessário)
+}
+
+# Fazendo a requisição
+response = requests.get(url_api, params=params)
+
+# Verificando se deu certo
+if response.status_code == 200:
+    data = response.json()
+    registros = data['result']['records']
+    df_156 = pd.DataFrame(registros)
+    st.success("Dados 156 carregados com sucesso da API!")
+else:
+    st.error("Erro ao carregar dados 156 da API.")
+
