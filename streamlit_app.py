@@ -65,6 +65,7 @@ def adicionar_icones(mapa, dados=None):
 
 # Opções do menu principal
 if aba == "Mapa Interativo":
+    st.subheader("🌍 Mapa Interativo")
     mapa = folium.Map(location=[latitude_base, longitude_base], zoom_start=13)
     adicionar_icones(mapa)
     folium_static(mapa)
@@ -100,7 +101,6 @@ elif aba == "Google Maps":
     
     # Solicitar chave da API do Google Maps
     gmaps_key = st.text_input("Insira sua chave da API do Google Maps:")
-
     if gmaps_key:
         gmaps = googlemaps.Client(key=gmaps_key)
 
@@ -127,7 +127,6 @@ elif aba == "Google Maps":
 elif aba == "Chatbot":
     st.subheader("🤖 Chatbot")
     user_input = st.text_input("Digite sua pergunta para o chatbot:")
-
     if st.button("Enviar"):
         try:
             # Simulação de resposta (substitua pelo modelo ou API do OpenAI)
@@ -135,18 +134,3 @@ elif aba == "Chatbot":
             st.write(resposta)
         except Exception as e:
             st.error(f"Erro ao processar a mensagem: {e}")
-elif aba == "Chatbot":
-    st.subheader("🤖 Chatbot")
-    user_input = st.text_input("Digite sua pergunta para o chatbot:")
-
-    if st.button("Enviar"):
-        try:
-            # Simulação de resposta (substitua pelo modelo ou API do OpenAI)
-            resposta = f"Você perguntou: '{user_input}'. Resposta automática: 'Estou aqui para ajudar!'"
-            st.write(resposta)
-        except Exception as e:
-            st.error(f"Erro ao processar a mensagem: {e}")
-            
-            
-
- 
