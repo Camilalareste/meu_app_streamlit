@@ -167,3 +167,6 @@ elif modo == "Gestor":
         git add streamlit_app.py
 git commit -m "Atualizando última linha do streamlit_app.py"
 git push
+!pip install streamlit
+!streamlit run streamlit_app.py & npx localtunnel --port 8501
+
