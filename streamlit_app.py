@@ -1,4 +1,4 @@
- import streamlit as st
+import streamlit as st
 import folium
 from streamlit_folium import folium_static
 import pandas as pd
@@ -34,7 +34,7 @@ latitude_base = -8.0476
 longitude_base = -34.8770
 
 # Google Maps API Key
-gmaps_api_key = "AIzaSyCkXStpIBQg2hV5hst-oEI1J2cw-iwlokc"
+gmaps_api_key = "AIzaSyAhVKl8h7HGGBHO4yEUxS5-dEgSjxZOnSY"
 gmaps = googlemaps.Client(key=gmaps_api_key)
 
 # Function to add custom icons to the map (enhanced)
@@ -109,11 +109,11 @@ def chatbot_responder(input_text):
                 "O custo total é aproximadamente R$ 7,50. As paradas de ônibus e trem estão sendo monitoradas em tempo real.")
     elif "leitura da energia" in input_text:
         return "A leitura da sua energia será feita no próximo dia 20. Por favor, certifique-se de que o medidor esteja acessível."
-    elif "carro do lixo" in input_text:
+    elif "carro do lixo" em input_text:
         return "O carro do lixo passa na sua casa toda terça-feira e sexta-feira às 8h da manhã."
-    elif "ocorrência" in input_text:
+    elif "ocorrência" em input_text:
         return "No momento, há uma ocorrência de via alagada na Av. Recife. Evite essa rota e busque alternativas."
-    elif "trânsito" in input_text:
+    elif "trânsito" em input_text:
         direcoes = obter_direcoes_transito("Camaragibe", "Cabo de Santo Agostinho")
         return f"Trânsito atualizado: {direcoes}"
     else:
@@ -195,5 +195,4 @@ elif aba == "Chatbot":
         st.write(resposta)
 
 # Add more functionalities as needed
-
- 
+  
