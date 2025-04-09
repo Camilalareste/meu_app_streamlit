@@ -24,6 +24,9 @@ aba = st.sidebar.radio("Menu Principal", (
     "Chatbot"
 ))
 
+# Adicionar mensagem de depuração para verificar a aba selecionada
+st.write(f"Aba selecionada: {aba}")
+
 # Coordenadas Base (Recife)
 latitude_base = -8.0476
 longitude_base = -34.8770
