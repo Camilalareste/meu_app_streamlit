@@ -7,8 +7,8 @@ import requests
 from folium.plugins import MarkerCluster
 
 # **For AI & Machine Learning (Future implementation)**
-# from sklearn.cluster import KMeans
-# from prophet import Prophet
+from sklearn.cluster import KMeans
+from prophet import Prophet
 
 # Page Configuration
 st.set_page_config(page_title="Plataforma de Mobilidade Urbana", layout="wide")
@@ -91,6 +91,23 @@ def chatbot_responder(input_text):
     # Placeholder for chatbot response logic
     return "Essa é uma resposta simulada do Chatbot."
 
+# Function to predict using Prophet
+def previsao_prophet(dados, coluna):
+    modelo = Prophet()
+    df = dados[['date', coluna]].rename(columns={'date': 'ds', coluna: 'y'})
+    modelo.fit(df)
+    futuro = modelo.make_future_dataframe(periods=30)
+    previsao = modelo.predict(futuro)
+    return previsao
+
+# Function to perform KMeans clustering
+def clustering_kmeans(dados, n_clusters=5):
+    coordenadas = dados[['latitude', 'longitude']].dropna()
+    kmeans = KMeans(n_clusters=n_clusters)
+    kmeans.fit(coordenadas)
+    dados['cluster'] = kmeans.labels_
+    return dados, kmeans.cluster_centers_
+
 # Handling different menu options
 if aba == "Mapa Interativo":
     mapa = folium.Map(location=[latitude_base, longitude_base], zoom_start=13)
@@ -111,17 +128,26 @@ elif aba == "Análises e Previsões (IA)":
     st.subheader("📊 Análises e Previsões com IA")
     st.markdown("""
     Essa seção usa modelos de inteligência artificial para gerar insights:
-    - **Previsão de volume de chamadas 156:** (Prophet/ARIMA - Em breve)
-    - **Identificação de áreas críticas:** (KMeans - Em breve)
+    - **Previsão de volume de chamadas 156:** Usando Prophet
+    - **Identificação de áreas críticas:** Usando KMeans
     - **Classificação de ocorrências:** (NLP - Em breve)
     - **Detecção de anomalias:** (Em breve)
     """)
     
-    # Placeholder for future functionalities:
-    # if st.button("📈 Gerar Previsões"):
-    #     # ... (Prophet/ARIMA code here) 
-    # if st.button("📍 Identificar Áreas Críticas"):
-    #     # ... (KMeans code here)
+    # Exemplo de Previsão Prophet
+    if st.button("📈 Gerar Previsões Prophet"):
+        previsoes = previsao_prophet(df_156, 'quantidade')
+        st.write(previsoes[['ds', 'yhat', 'yhat_lower', 'yhat_upper']].tail())
+
+    # Exemplo de Clustering KMeans
+    if st.button("📍 Identificar Áreas Críticas com KMeans"):
+        df_clusterizado, centros = clustering_kmeans(df_156)
+        st.dataframe(df_clusterizado)
+        
+        mapa = folium.Map(location=[latitude_base, longitude_base], zoom_start=13)
+        for centro in centros:
+            folium.Marker(location=centro, popup="Centro do Cluster").add_to(mapa)
+        folium_static(mapa)
 
 elif aba == "Chamados SEDEC":
     st.subheader("Chamados SEDEC")
