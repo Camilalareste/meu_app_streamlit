@@ -138,5 +138,17 @@ elif aba == "Chatbot":
             git clone https://github.com/Camilalareste/meu_app_streamlit.git
 cd meu_app_streamlit
 streamlit run streamlit_app.py
+elif aba == "Chatbot":
+    st.subheader("🤖 Chatbot")
+    user_input = st.text_input("Digite sua pergunta para o chatbot:")
+
+    if st.button("Enviar"):
+        try:
+            # Simulação de resposta (substitua pelo modelo ou API do OpenAI)
+            resposta = f"Você perguntou: '{user_input}'. Resposta automática: 'Estou aqui para ajudar!'"
+            st.write(resposta)
+        except Exception as e:
+            st.error(f"Erro ao processar a mensagem: {e}")
+            
 
  
