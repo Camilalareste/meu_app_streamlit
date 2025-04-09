@@ -1,4 +1,10 @@
-elif aba == "Carregar Arquivo (Excel/CSV)":
+# Bloco principal de seleção de menus
+if aba == "Mapa Interativo":
+    # Código do mapa interativo
+elif aba == "Ocorrências 156":
+    # Código das ocorrências
+elif aba == "Carregar Arquivo (Excel/CSV)":  # Adicionado aqui
+    # Novo código para carregar arquivoselif aba == "Carregar Arquivo (Excel/CSV)":
     st.subheader("📂 Carregar Arquivo Excel ou CSV")
     uploaded_file = st.file_uploader("Faça o upload do arquivo", type=["csv", "xlsx"])
     
@@ -18,7 +24,8 @@ elif aba == "Carregar Arquivo (Excel/CSV)":
                 df.to_csv("dados_convertidos.csv", index=False)
                 st.success("Arquivo salvo como 'dados_convertidos.csv'")
         except Exception as e:
-            st.error(f"Erro ao processar o arquivo: {e}")import streamlit as st
+            st.error(f"Erro ao processar o arquivo: {e}")
+            import streamlit as st
 import folium
 from streamlit_folium import folium_static
 import pandas as pd
