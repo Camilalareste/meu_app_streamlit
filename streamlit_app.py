@@ -169,5 +169,6 @@ git commit -m "Atualizando última linha do streamlit_app.py"
 git push
 !pip install streamlit
 !streamlit run streamlit_app.py & npx localtunnel --port 8501
+%cd meu_app_streamlit
 
 
