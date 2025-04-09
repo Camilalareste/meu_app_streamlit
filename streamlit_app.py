@@ -34,7 +34,7 @@ latitude_base = -8.0476
 longitude_base = -34.8770
 
 # Google Maps API Key
-gmaps_api_key = "AIzaSyAhVKl8h7HGGBHO4yEUxS5-dEgSjxZOnSY"
+gmaps_api_key = "AIzaSyCkXStpIBQg2hV5hst-oEI1J2cw-iwlokc"
 gmaps = googlemaps.Client(key=gmaps_api_key)
 
 # Function to add custom icons to the map (enhanced)
@@ -173,7 +173,7 @@ elif aba == "Análises e Previsões (IA)":
         st.dataframe(df_clusterizado)
         
         mapa = folium.Map(location=[latitude_base, longitude_base], zoom_start=13)
-        for centro in centros:
+        for centro em centros:
             folium.Marker(location=centro, popup="Centro do Cluster").add_to(mapa)
         folium_static(mapa)
 
