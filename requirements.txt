@@ -6,3 +6,5 @@ openai
 scikit-learn
 statsmodels
 requests
+git add requirements.txt
+git commit -m "Atualiza requirements.txt para incluir bibliotecas necessárias para análises e previsões"
