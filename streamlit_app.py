@@ -164,3 +164,6 @@ elif modo == "Gestor":
         st.subheader("📊 Informações dos Usuários")
         st.markdown("Funcionalidade para listar usuários e gerenciar dados em desenvolvimento.")
         Atualizando última linha do streamlit_app.py
+        git add streamlit_app.py
+git commit -m "Atualizando última linha do streamlit_app.py"
+git push
