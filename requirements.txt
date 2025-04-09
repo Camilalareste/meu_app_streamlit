@@ -6,3 +6,5 @@ openai
 scikit-learn
 statsmodels
 requests
+prophetscikit-learn
+prophet
