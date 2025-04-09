@@ -60,32 +60,53 @@ def adicionar_icones(mapa, dados=None):
                                      prefix='glyphicon')
                 ).add_to(mapa)
     else:
-        # Use simulated data if no API data is provided
-        for i in range(15):
-            tipo = random.choice(list(icones.keys()))
-            lat_offset = random.uniform(-0.01, 0.01)
-            lon_offset = random.uniform(-0.01, 0.01)
+# Function to add custom icons to the map using API data
+def adicionar_icones_api(mapa, dados, icones, latitude_base, longitude_base):
+    for _, row in dados.iterrows():
+        tipo = row.get("tipo", "Desconhecido")  # Get 'tipo' column or default
+        lat = row.get("latitude", latitude_base)  # Get latitude or default
+        lon = row.get("longitude", longitude_base)  # Get longitude or default
+        
+        if tipo in icones:
             folium.Marker(
-                location=[latitude_base + lat_offset, longitude_base + lon_offset],
-                popup=f"{tipo} #{i+1}",
+                location=[lat, lon],
+                popup=tipo,  # Add more info from data
                 icon=folium.Icon(color=icones[tipo]["cor"], 
                                  icon=icones[tipo]["icone"], 
                                  prefix='glyphicon')
             ).add_to(mapa)
 
-# Function to load data from CKAN API
-@st.cache_data  
-def carregar_dados_156():
-    # ... (same as before)
+# Function to add custom icons to the map using simulated data
+def adicionar_icones_simulados(mapa, icones, latitude_base, longitude_base, num_markers=15):
+    for i in range(num_markers):
+        tipo = random.choice(list(icones.keys()))
+        lat_offset = random.uniform(-0.01, 0.01)
+        lon_offset = random.uniform(-0.01, 0.01)
+        folium.Marker(
+            location=[latitude_base + lat_offset, longitude_base + lon_offset],
+            popup=f"{tipo} #{i+1}",
+            icon=folium.Icon(color=icones[tipo]["cor"], 
+                             icon=icones[tipo]["icone"], 
+                             prefix='glyphicon')
+        ).add_to(mapa)
 
 # Handling different menu options
 if aba == "Mapa Interativo":
     mapa = folium.Map(location=[latitude_base, longitude_base], zoom_start=13)
     
+    icones = {
+        "Lixo": {"icone": "trash", "cor": "green"},
+        "Trânsito": {"icone": "car", "cor": "red"},
+        "Metrô": {"icone": "train", "cor": "purple"},
+        "Zona Azul": {"icone": "info-sign", "cor": "blue"},
+        "Acidente": {"icone": "exclamation-sign", "cor": "orange"},
+        # Add more icon types as needed
+    }
+    
     # Choose between API data or simulated data:
     # df_156 = carregar_dados_156()
-    # adicionar_icones(mapa, dados=df_156) 
-    adicionar_icones(mapa)  # Using simulated data for now
+    # adicionar_icones_api(mapa, df_156, icones, latitude_base, longitude_base) 
+    adicionar_icones_simulados(mapa, icones, latitude_base, longitude_base)  # Using simulated data for now
     
     folium_static(mapa)
 
