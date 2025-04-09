@@ -135,9 +135,6 @@ elif aba == "Chatbot":
             st.write(resposta)
         except Exception as e:
             st.error(f"Erro ao processar a mensagem: {e}")
-            git clone https://github.com/Camilalareste/meu_app_streamlit.git
-cd meu_app_streamlit
-streamlit run streamlit_app.py
 elif aba == "Chatbot":
     st.subheader("🤖 Chatbot")
     user_input = st.text_input("Digite sua pergunta para o chatbot:")
