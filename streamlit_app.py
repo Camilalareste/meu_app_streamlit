@@ -1,4 +1,24 @@
-import streamlit as st
+elif aba == "Carregar Arquivo (Excel/CSV)":
+    st.subheader("📂 Carregar Arquivo Excel ou CSV")
+    uploaded_file = st.file_uploader("Faça o upload do arquivo", type=["csv", "xlsx"])
+    
+    if uploaded_file is not None:
+        try:
+            # Detecta se é Excel ou CSV
+            if uploaded_file.name.endswith(".csv"):
+                df = pd.read_csv(uploaded_file)
+            elif uploaded_file.name.endswith(".xlsx"):
+                df = pd.read_excel(uploaded_file)
+
+            st.write("Pré-visualização dos Dados:")
+            st.dataframe(df)
+
+            # Salvar como CSV (se necessário)
+            if st.button("Salvar como CSV"):
+                df.to_csv("dados_convertidos.csv", index=False)
+                st.success("Arquivo salvo como 'dados_convertidos.csv'")
+        except Exception as e:
+            st.error(f"Erro ao processar o arquivo: {e}")import streamlit as st
 import folium
 from streamlit_folium import folium_static
 import pandas as pd
