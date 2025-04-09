@@ -108,3 +108,27 @@ elif aba == "Chatbot":
     user_input = st.text_input("Pergunte ao Chatbot:")
     if st.button("Enviar"):
         st.write("Funcionalidade em desenvolvimento.")
+elif aba == "Análises e Previsões (IA)":
+    st.subheader("📊 Análises e Previsões com IA")
+    st.markdown("""
+    Essa seção usa modelos de inteligência artificial para gerar insights:
+    - **Previsão de volume de chamadas 156:** Usando Prophet
+    - **Identificação de áreas críticas:** Usando KMeans
+    - **Classificação de ocorrências:** (NLP - Em breve)
+    - **Detecção de anomalias:** (Em breve)
+    """)
+    
+    # Exemplo de Previsão Prophet
+    if st.button("📈 Gerar Previsões Prophet"):
+        previsoes = previsao_prophet(df_156, 'quantidade')
+        st.write(previsoes[['ds', 'yhat', 'yhat_lower', 'yhat_upper']].tail())
+
+    # Exemplo de Clustering KMeans
+    if st.button("📍 Identificar Áreas Críticas com KMeans"):
+        df_clusterizado, centros = clustering_kmeans(df_156)
+        st.dataframe(df_clusterizado)
+        
+        mapa = folium.Map(location=[latitude_base, longitude_base], zoom_start=13)
+        for centro in centros:
+            folium.Marker(location=centro, popup="Centro do Cluster").add_to(mapa)
+        folium_static(mapa)
