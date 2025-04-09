@@ -1,10 +1,79 @@
-# Bloco principal de seleção de menus
+import streamlit as st
+import folium
+from streamlit_folium import folium_static
+import pandas as pd
+import random
+import googlemaps
+from datetime import datetime
+
+# Configuração da página
+st.set_page_config(page_title="Plataforma de Mobilidade Urbana", layout="wide")
+
+# Título
+st.title("🚦 Plataforma de Mobilidade Urbana Inteligente")
+
+# Sidebar: Modo de Visualização e Menu Principal
+modo = st.sidebar.radio("👤 Modo de Visualização", ["Usuário", "Gestor"])
+aba = st.sidebar.radio("Menu Principal", (
+    "Mapa Interativo",
+    "Ocorrências 156",
+    "Carregar Arquivo (Excel/CSV)",
+    "Google Maps",
+    "Chatbot"
+))
+
+# Coordenadas Base (Recife)
+latitude_base = -8.0476
+longitude_base = -34.8770
+
+# Função para adicionar ícones ao mapa
+def adicionar_icones(mapa, dados=None):  
+    icones = {
+        "Lixo": {"icone": "trash", "cor": "green"},
+        "Trânsito": {"icone": "car", "cor": "red"},
+        "Metrô": {"icone": "train", "cor": "purple"},
+        "Zona Azul": {"icone": "info-sign", "cor": "blue"},
+        "Acidente": {"icone": "exclamation-sign", "cor": "orange"},
+    }
+
+    if dados is not None:
+        for _, row in dados.iterrows():
+            tipo = row.get("tipo", "Desconhecido")
+            lat = row.get("latitude", latitude_base)
+            lon = row.get("longitude", longitude_base)
+            
+            if tipo in icones:
+                folium.Marker(
+                    location=[lat, lon],
+                    popup=tipo,
+                    icon=folium.Icon(color=icones[tipo]["cor"], 
+                                     icon=icones[tipo]["icone"], 
+                                     prefix='glyphicon')
+                ).add_to(mapa)
+    else:
+        for i in range(15):
+            tipo = random.choice(list(icones.keys()))
+            lat_offset = random.uniform(-0.01, 0.01)
+            lon_offset = random.uniform(-0.01, 0.01)
+            folium.Marker(
+                location=[latitude_base + lat_offset, longitude_base + lon_offset],
+                popup=f"{tipo} #{i+1}",
+                icon=folium.Icon(color=icones[tipo]["cor"], 
+                                 icon=icones[tipo]["icone"], 
+                                 prefix='glyphicon')
+            ).add_to(mapa)
+
+# Opções do menu principal
 if aba == "Mapa Interativo":
-    # Código do mapa interativo
+    mapa = folium.Map(location=[latitude_base, longitude_base], zoom_start=13)
+    adicionar_icones(mapa)
+    folium_static(mapa)
+
 elif aba == "Ocorrências 156":
-    # Código das ocorrências
-elif aba == "Carregar Arquivo (Excel/CSV)":  # Adicionado aqui
-    # Novo código para carregar arquivoselif aba == "Carregar Arquivo (Excel/CSV)":
+    st.subheader("Ocorrências 156")
+    st.markdown("Funcionalidade em desenvolvimento.")
+
+elif aba == "Carregar Arquivo (Excel/CSV)":
     st.subheader("📂 Carregar Arquivo Excel ou CSV")
     uploaded_file = st.file_uploader("Faça o upload do arquivo", type=["csv", "xlsx"])
     
@@ -25,137 +94,46 @@ elif aba == "Carregar Arquivo (Excel/CSV)":  # Adicionado aqui
                 st.success("Arquivo salvo como 'dados_convertidos.csv'")
         except Exception as e:
             st.error(f"Erro ao processar o arquivo: {e}")
-            import streamlit as st
-import folium
-from streamlit_folium import folium_static
-import pandas as pd
-import random
-import requests
-from folium.plugins import MarkerCluster
-import googlemaps
-from datetime import datetime
 
-# Page Configuration
-st.set_page_config(page_title="Plataforma de Mobilidade Urbana", layout="wide")
+elif aba == "Google Maps":
+    st.subheader("🌍 Visualização com Google Maps")
+    
+    # Solicitar chave da API do Google Maps
+    gmaps_key = st.text_input("Insira sua chave da API do Google Maps:")
 
-# **For AI & Machine Learning (Future implementation)**
-from sklearn.cluster import KMeans
-from prophet import Prophet
+    if gmaps_key:
+        gmaps = googlemaps.Client(key=gmaps_key)
 
-# Title
-st.title("🚦 Plataforma de Mobilidade Urbana Inteligente")
+        # Entrada de localização
+        endereco = st.text_input("Digite um endereço ou localização:")
 
-# Sidebar: View Mode and Main Menu
-modo = st.sidebar.radio("👤 Modo de Visualização", ["Usuário", "Gestor"])
-aba = st.sidebar.radio("Menu Principal", (
-    "Mapa Interativo",
-    "Ocorrências 156",
-    "Análises e Previsões (IA)",
-    "Chamados SEDEC", 
-    "Infraestrutura e Serviços",
-    "Chatbot"
-))
+        if st.button("Buscar Localização"):
+            try:
+                # Geocodificar o endereço
+                geocode_result = gmaps.geocode(endereco)
+                if geocode_result:
+                    location = geocode_result[0]['geometry']['location']
+                    lat, lng = location['lat'], location['lng']
 
-# Base Coordinates (Recife)
-latitude_base = -8.0476
-longitude_base = -34.8770
-
-# Function to add custom icons to the map (enhanced)
-def adicionar_icones(mapa, dados=None):  
-    # Allows using data from API or simulated data
-    icones = {
-        "Lixo": {"icone": "trash", "cor": "green"},
-        "Trânsito": {"icone": "car", "cor": "red"},
-        "Metrô": {"icone": "train", "cor": "purple"},
-        "Zona Azul": {"icone": "info-sign", "cor": "blue"},
-        "Acidente": {"icone": "exclamation-sign", "cor": "orange"},
-        # Add more icon types as needed
-    }
-
-    if dados is not None:
-        # Use data from API if provided
-        for _, row in dados.iterrows():
-            tipo = row.get("tipo", "Desconhecido")  # Get 'tipo' column or default
-            lat = row.get("latitude", latitude_base)  # Get latitude or default
-            lon = row.get("longitude", longitude_base)  # Get longitude or default
-            
-            if tipo in icones:
-                folium.Marker(
-                    location=[lat, lon],
-                    popup=tipo, # Add more info from data
-                    icon=folium.Icon(color=icones[tipo]["cor"], 
-                                     icon=icones[tipo]["icone"], 
-                                     prefix='glyphicon')
-                ).add_to(mapa)
-    else:
-        # Use simulated data if no API data is provided
-        for i in range(15):
-            tipo = random.choice(list(icones.keys()))
-            lat_offset = random.uniform(-0.01, 0.01)
-            lon_offset = random.uniform(-0.01, 0.01)
-            folium.Marker(
-                location=[latitude_base + lat_offset, longitude_base + lon_offset],
-                popup=f"{tipo} #{i+1}",
-                icon=folium.Icon(color=icones[tipo]["cor"], 
-                                 icon=icones[tipo]["icone"], 
-                                 prefix='glyphicon')
-            ).add_to(mapa)
-
-# Handling different menu options
-if aba == "Mapa Interativo":
-    mapa = folium.Map(location=[latitude_base, longitude_base], zoom_start=13)
-    adicionar_icones(mapa)  # Using simulated data for now
-    folium_static(mapa)
-
-elif aba == "Ocorrências 156":
-    st.subheader("Ocorrências 156")
-    st.markdown("Funcionalidade em desenvolvimento.")
-
-elif aba == "Análises e Previsões (IA)":
-    st.subheader("📊 Análises e Previsões com IA")
-    st.markdown("""
-    Essa seção usa modelos de inteligência artificial para gerar insights:
-    - **Previsão de volume de chamadas 156:** Usando Prophet
-    - **Identificação de áreas críticas:** Usando KMeans
-    - **Classificação de ocorrências:** (NLP - Em breve)
-    - **Detecção de anomalias:** (Em breve)
-    """)
-    st.markdown("Funcionalidade em desenvolvimento.")
-
-elif aba == "Chamados SEDEC":
-    st.subheader("Chamados SEDEC")
-    st.markdown("Funcionalidade em desenvolvimento.")
-
-elif aba == "Infraestrutura e Serviços":
-    st.subheader("Infraestrutura e Serviços")
-    st.markdown("Funcionalidade em desenvolvimento.")
+                    # Exibir o mapa com a localização
+                    mapa = folium.Map(location=[lat, lng], zoom_start=15)
+                    folium.Marker([lat, lng], popup=endereco).add_to(mapa)
+                    folium_static(mapa)
+                else:
+                    st.error("Localização não encontrada.")
+            except Exception as e:
+                st.error(f"Erro na API do Google Maps: {e}")
 
 elif aba == "Chatbot":
-    st.subheader("Chatbot")
-    user_input = st.text_input("Pergunte ao Chatbot:")
-    if st.button("Enviar"):
-        st.write("Funcionalidade em desenvolvimento.")
-elif aba == "Análises e Previsões (IA)":
-    st.subheader("📊 Análises e Previsões com IA")
-    st.markdown("""
-    Essa seção usa modelos de inteligência artificial para gerar insights:
-    - **Previsão de volume de chamadas 156:** Usando Prophet
-    - **Identificação de áreas críticas:** Usando KMeans
-    - **Classificação de ocorrências:** (NLP - Em breve)
-    - **Detecção de anomalias:** (Em breve)
-    """)
-    
-    # Exemplo de Previsão Prophet
-    if st.button("📈 Gerar Previsões Prophet"):
-        previsoes = previsao_prophet(df_156, 'quantidade')
-        st.write(previsoes[['ds', 'yhat', 'yhat_lower', 'yhat_upper']].tail())
+    st.subheader("🤖 Chatbot")
+    user_input = st.text_input("Digite sua pergunta para o chatbot:")
 
-    # Exemplo de Clustering KMeans
-    if st.button("📍 Identificar Áreas Críticas com KMeans"):
-        df_clusterizado, centros = clustering_kmeans(df_156)
-        st.dataframe(df_clusterizado)
-        
-        mapa = folium.Map(location=[latitude_base, longitude_base], zoom_start=13)
-        for centro in centros:
-            folium.Marker(location=centro, popup="Centro do Cluster").add_to(mapa)
-        folium_static(mapa)
+    if st.button("Enviar"):
+        try:
+            # Simulação de resposta (substitua pelo modelo ou API do OpenAI)
+            resposta = f"Você perguntou: '{user_input}'. Resposta automática: 'Estou aqui para ajudar!'"
+            st.write(resposta)
+        except Exception as e:
+            st.error(f"Erro ao processar a mensagem: {e}")
+
+ 
