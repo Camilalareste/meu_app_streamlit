@@ -1,3 +1,4 @@
+# Configuração da Página
 import streamlit as st
 import folium
 from streamlit_folium import folium_static
@@ -6,13 +7,13 @@ import random
 import requests
 from folium.plugins import MarkerCluster
 
-# Page Configuration
+# Configuração da Página
 st.set_page_config(page_title="Plataforma de Mobilidade Urbana", layout="wide")
 
-# Title
+# Título
 st.title("🚦 Plataforma de Mobilidade Urbana Inteligente")
 
-# Sidebar: View Mode and Main Menu
+# Barra Lateral: Modo de Visualização e Menu Principal
 modo = st.sidebar.radio("👤 Modo de Visualização", ["Usuário", "Gestor"])
 aba = st.sidebar.radio("Menu Principal", (
     "Mapa Interativo",
@@ -23,37 +24,37 @@ aba = st.sidebar.radio("Menu Principal", (
     "Chatbot"
 ))
 
-# Base Coordinates (Recife)
+# Coordenadas Base (Recife)
 latitude_base = -8.0476
 longitude_base = -34.8770
 
-# Define the icons dictionary once
+# Definir o dicionário de ícones uma vez
 icones = {
     "Lixo": {"icone": "trash", "cor": "green"},
     "Trânsito": {"icone": "car", "cor": "red"},
     "Metrô": {"icone": "train", "cor": "purple"},
     "Zona Azul": {"icone": "info-sign", "cor": "blue"},
     "Acidente": {"icone": "exclamation-sign", "cor": "orange"},
-    # Add more icon types as needed
+    # Adicione mais tipos de ícones conforme necessário
 }
 
-# Function to add custom icons to the map using API data
+# Função para adicionar ícones personalizados ao mapa usando dados da API
 def adicionar_icones_api(mapa, dados, icones, latitude_base, longitude_base):
     for _, row in dados.iterrows():
-        tipo = row.get("tipo", "Desconhecido")  # Get 'tipo' column or default
-        lat = row.get("latitude", latitude_base)  # Get latitude or default
-        lon = row.get("longitude", longitude_base)  # Get longitude or default
+        tipo = row.get("tipo", "Desconhecido")  # Obter coluna 'tipo' ou padrão
+        lat = row.get("latitude", latitude_base)  # Obter latitude ou padrão
+        lon = row.get("longitude", longitude_base)  # Obter longitude ou padrão
         
         if tipo in icones:
             folium.Marker(
                 location=[lat, lon],
-                popup=tipo,  # Add more info from data
+                popup=tipo,  # Adicionar mais informações dos dados
                 icon=folium.Icon(color=icones[tipo]["cor"], 
                                  icon=icones[tipo]["icone"], 
                                  prefix='glyphicon')
             ).add_to(mapa)
 
-# Function to add custom icons to the map using simulated data
+# Função para adicionar ícones personalizados ao mapa usando dados simulados
 def adicionar_icones_simulados(mapa, icones, latitude_base, longitude_base, num_markers=15):
     for i in range(num_markers):
         tipo = random.choice(list(icones.keys()))
@@ -67,19 +68,19 @@ def adicionar_icones_simulados(mapa, icones, latitude_base, longitude_base, num_
                              prefix='glyphicon')
         ).add_to(mapa)
 
-# Handling different menu options
+# Tratando diferentes opções do menu
 if aba == "Mapa Interativo":
     mapa = folium.Map(location=[latitude_base, longitude_base], zoom_start=13)
     
-    # Choose between API data or simulated data:
+    # Escolha entre dados da API ou dados simulados:
     # df_156 = carregar_dados_156()
     # adicionar_icones_api(mapa, df_156, icones, latitude_base, longitude_base) 
-    adicionar_icones_simulados(mapa, icones, latitude_base, longitude_base)  # Using simulated data for now
+    adicionar_icones_simulados(mapa, icones, latitude_base, longitude_base)  # Usando dados simulados por enquanto
     
     folium_static(mapa)
 
 elif aba == "Ocorrências 156":
-    # Placeholder for future functionalities
+    # Placeholder para funcionalidades futuras
     pass
 
 elif aba == "Análises e Previsões (IA)":
@@ -92,11 +93,10 @@ elif aba == "Análises e Previsões (IA)":
     - **Detecção de anomalias:** (Em breve)
     """)
     
-    # Placeholder for future functionalities:
+    # Placeholder para funcionalidades futuras:
     # if st.button("📈 Gerar Previsões"):
-    #     # ... (Prophet/ARIMA code here) 
+    #     # ... (código Prophet/ARIMA aqui) 
     # if st.button("📍 Identificar Áreas Críticas"):
-    #     # ... (KMeans code here)
+    #     # ... (código KMeans aqui)
 
-# ... (rest of the code for other sections - Chamados SEDEC, Infraestrutura, Chatbot)
-Summary of Changes
+# ... (restante do código para outras seções - Chamados SEDEC, Infraestrutura, Chatbot)
