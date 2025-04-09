@@ -3,3 +3,6 @@ folium
 streamlit-folium
 pandas
 openai
+scikit-learn
+statsmodels
+requests
