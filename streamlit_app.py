@@ -1,38 +1,4 @@
-import pandas as pd
-import streamlit as st
-
-def carregar_dados():
-    try:
-        dados_156 = pd.read_csv("156_cco_diario.csv")
-    except pd.errors.ParserError as e:
-        st.error(f"Erro ao ler o arquivo CSV '156_cco_diario.csv': {e}")
-        return None
-    
-    coleta = pd.read_csv("coleta.csv")
-    equipamentos = pd.read_csv("equipamentosfiscalizacao.csv")
-    fluxo_velocidade = pd.read_csv("fluxovelocidadeemquinzeminuto-foto-jan-25.csv")
-    monitoramento_cttu = pd.read_csv("monitoramentocttu.csv")
-    pontos_coleta = pd.read_csv("pontos_coleta.csv")
-    sedec_chamados = pd.read_csv("sedec_chamados_tempo_real.csv")
-    sedec_tipo_ocorrencias = pd.read_csv("sedec_tipo_ocorrencias_tempo_real.csv")
-    sedec_vistorias = pd.read_csv("sedec_vistorias_tempo_real.csv")
-
-    return {
-        "dados_156": dados_156,
-        "coleta": coleta,
-        "equipamentos": equipamentos,
-        "fluxo_velocidade": fluxo_velocidade,
-        "monitoramento_cttu": monitoramento_cttu,
-        "pontos_coleta": pontos_coleta,
-        "sedec_chamados": sedec_chamados,
-        "sedec_tipo_ocorrencias": sedec_tipo_ocorrencias,
-        "sedec_vistorias": sedec_vistorias,
-    }
-
-# Carregar todos os dados
-dados = carregar_dados()
-if dados is None:
-    st.stop()# Configuração da Página
+# Configuração da Página
 import streamlit as st
 import pandas as pd
 import folium
@@ -65,7 +31,12 @@ longitude_base = -34.8770
 
 # Função para carregar dados dos arquivos CSV
 def carregar_dados():
-    dados_156 = pd.read_csv("156_cco_diario.csv")
+    try:
+        dados_156 = pd.read_csv("156_cco_diario.csv")
+    except pd.errors.ParserError as e:
+        st.error(f"Erro ao ler o arquivo CSV '156_cco_diario.csv': {e}")
+        return None
+    
     coleta = pd.read_csv("coleta.csv")
     equipamentos = pd.read_csv("equipamentosfiscalizacao.csv")
     fluxo_velocidade = pd.read_csv("fluxovelocidadeemquinzeminuto-foto-jan-25.csv")
@@ -89,6 +60,8 @@ def carregar_dados():
 
 # Carregar todos os dados
 dados = carregar_dados()
+if dados is None:
+    st.stop()
 
 # Função para adicionar ícones personalizados ao mapa
 def adicionar_icones(mapa, dados, tipo_dado, lat_col='latitude', lon_col='longitude', popup_col=None):
@@ -169,4 +142,3 @@ elif aba == "Chatbot":
     st.text("Funcionalidade do Chatbot em desenvolvimento")
 
 # Adicionar mais funcionalidades conforme necessário
- 
