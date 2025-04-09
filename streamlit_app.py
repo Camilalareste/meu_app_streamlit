@@ -135,5 +135,7 @@ elif aba == "Chatbot":
             st.write(resposta)
         except Exception as e:
             st.error(f"Erro ao processar a mensagem: {e}")
+            git clone https://github.com/Camilalareste/meu_app_streamlit.git
+cd meu_app_streamlit
 
  
