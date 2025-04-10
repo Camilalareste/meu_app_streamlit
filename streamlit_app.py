@@ -1,4 +1,4 @@
-import streamlit as st
+7import streamlit as st
 import folium
 from streamlit_folium import folium_static
 import pandas as pd
@@ -172,6 +172,7 @@ git push
 %cd meu_app_streamlit
 !pip install streamlit
 %cd meu_app_streamlit
+ npm install -g localtunnel
     
 
 
