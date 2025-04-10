@@ -171,6 +171,7 @@ git push
 !streamlit run streamlit_app.py & npx localtunnel --port 8501
 %cd meu_app_streamlit
 !pip install streamlit
-
+%cd meu_app_streamlit
+    
 
 
