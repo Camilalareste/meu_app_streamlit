@@ -8,7 +8,6 @@ from datetime import datetime
 
 # Configuração da página deve ser o primeiro comando Streamlit
 st.set_page_config(page_title="Plataforma de Mobilidade Urbana", layout="wide")
-
 # Título
 st.title("🚦 Plataforma de Mobilidade Urbana Inteligente")import streamlit as st
 
