@@ -6,11 +6,12 @@ import random
 import googlemaps
 from datetime import datetime
 
-# Configuração da página
+# Configuração da página deve ser o primeiro comando Streamlit
 st.set_page_config(page_title="Plataforma de Mobilidade Urbana", layout="wide")
 
 # Título
-st.title("🚦 Plataforma de Mobilidade Urbana Inteligente")
+st.title("🚦 Plataforma de Mobilidade Urbana Inteligente")import streamlit as st
+
 
 # Sidebar: Modo de Visualização
 modo = st.sidebar.radio("👤 Modo de Visualização", ["Usuário", "Gestor"])
