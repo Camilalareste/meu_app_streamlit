@@ -162,7 +162,8 @@ elif modo == "Gestor":
 
     elif aba == "Informações dos Usuários":
         st.subheader("📊 Informações dos Usuários")
-        st.markdown("Funcionalidade para listar usuários e gerenciar dados em desenvolvimento.")import streamlit as st
+        st.markdown("Funcionalidade para listar usuários e gerenciar dados em desenvolvimento.")
+        import streamlit as st
 import folium
 from streamlit_folium import folium_static
 import pandas as pd
