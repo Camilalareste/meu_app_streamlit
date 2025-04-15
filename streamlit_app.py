@@ -328,6 +328,7 @@ elif modo == "Gestor":
     elif aba == "Informações dos Usuários":
         st.subheader("📊 Informações dos Usuários")
         st.markdown("Funcionalidade para listar usuários e gerenciar dados em desenvolvimento.")
+        
     
 
 
